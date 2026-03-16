@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "blackboard-v2-schema",
+  "title": "Blackboard v2.0 Schema",
+  "description": "多智能体团队通信黑板报数据格式",
+  "type": "object",
+  "required": ["version", "session_id", "phase", "participants", "shared_state", "messages"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "2.0",
+      "description": "黑板报协议版本"
+    },
+    "session_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "唯一会话标识"
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["task", "discussion", "decision"],
+      "description": "当前阶段：任务/讨论/决策"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 2,
+      "description": "参与的 Agent 列表"
+    },
+    "shared_state": {
+      "type": "object",
+      "required": ["task_outputs", "message_thread", "current_turn", "next_speaker", "is_complete"],
+      "properties": {
+        "task_outputs": {
+          "type": "object",
+          "description": "各 Agent 的任务输出结果"
+        },
+        "message_thread": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "description": "消息历史记录"
+        },
+        "current_turn": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "当前轮次"
+        },
+        "next_speaker": {
+          "type": "string",
+          "description": "下一位发言人"
+        },
+        "is_complete": {
+          "type": "boolean",
+          "description": "讨论是否结束"
+        },
+        "topic": {
+          "type": "string",
+          "description": "当前讨论主题"
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "content": { "type": "string" },
+              "approved_by": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "description": "已达成决策列表"
+        }
+      }
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/message"
+      },
+      "description": "消息列表"
+    },
+    "termination_condition": {
+      "type": "object",
+      "required": ["type", "params"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["max_turns", "consensus", "timeout", "manual"],
+          "description": "终止条件类型"
+        },
+        "params": {
+          "type": "object",
+          "description": "终止条件参数"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "total_tokens": {
+          "type": "integer"
+        },
+        "coordinator_version": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "message": {
+      "type": "object",
+      "required": ["id", "timestamp", "from", "type", "content"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "消息唯一ID"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 时间戳"
+        },
+        "from": {
+          "type": "string",
+          "description": "发送者 Agent ID"
+        },
+        "to": {
+          "type": "string",
+          "description": "接收者（可选，默认为 all）"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["proposal", "question", "response", "decision", "handoff", "task_result", "system"],
+          "description": "消息类型"
+        },
+        "content": {
+          "type": "string",
+          "description": "消息内容"
+        },
+        "requires_response": {
+          "type": "boolean",
+          "description": "是否需要回复"
+        },
+        "responded_by": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "已回复的 Agent 列表"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "置信度评分（可选）"
+        },
+        "references": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "引用的消息 ID 列表"
+        }
+      }
+    }
+  }
+}
