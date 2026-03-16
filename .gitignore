@@ -1,0 +1,27 @@
+# 忽略文件
+
+# Claude Code 生成的临时文件
+*.log
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 测试文件
+test/
+tests/
+*.test.md
+
+# 本地配置
+.env
+.env.local
+config.local.json
+
+# 备份文件
+*.bak
+*.backup
