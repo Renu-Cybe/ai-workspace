@@ -76,7 +76,7 @@ def parse_schedule(schedule_type: str, **kwargs) -> Dict[str, str]:
         # /SC DAILY /ST HH:MM
         time_str = kwargs.get("time", "00:00")
         result["schedule"] = "DAILY"
-        result["time"] = time_str.replace(":", "")
+        result["time"] = time_str  # 保持 HH:MM 格式
 
     elif schedule_type == "weekly":
         # /SC WEEKLY /D MON /ST HH:MM
@@ -86,7 +86,7 @@ def parse_schedule(schedule_type: str, **kwargs) -> Dict[str, str]:
         time_str = kwargs.get("time", "09:00")
         result["schedule"] = "WEEKLY"
         result["days"] = day
-        result["time"] = time_str.replace(":", "")
+        result["time"] = time_str  # 保持 HH:MM 格式
 
     elif schedule_type == "monthly":
         # /SC MONTHLY /D 1 /ST HH:MM
@@ -94,13 +94,13 @@ def parse_schedule(schedule_type: str, **kwargs) -> Dict[str, str]:
         time_str = kwargs.get("time", "00:00")
         result["schedule"] = "MONTHLY"
         result["date"] = day
-        result["time"] = time_str.replace(":", "")
+        result["time"] = time_str  # 保持 HH:MM 格式
 
     elif schedule_type == "once":
         # /SC ONCE /ST HH:MM
         time_str = kwargs.get("time", datetime.now().strftime("%H:%M"))
         result["schedule"] = "ONCE"
-        result["time"] = time_str.replace(":", "")
+        result["time"] = time_str  # 保持 HH:MM 格式
 
     return result
 
@@ -140,7 +140,24 @@ def add_task(config: Dict[str, Any]) -> Dict[str, Any]:
     task_cmd += ' /F'
 
     try:
-        result = subprocess.run(task_cmd, capture_output=True, text=True, shell=True)
+        # 使用 PowerShell 执行 schtasks 避免编码问题
+        ps_cmd = f'schtasks /Create /TN "ClaudeScheduler\\{task_name}" /TR "{script_path}"'
+
+        if schedule_config.get("schedule") == "DAILY":
+            ps_cmd += f' /SC DAILY /ST {schedule_config["time"]}'
+        elif schedule_config.get("schedule") == "WEEKLY":
+            ps_cmd += f' /SC WEEKLY /D {schedule_config["days"]} /ST {schedule_config["time"]}'
+        elif schedule_config.get("schedule") == "MONTHLY":
+            ps_cmd += f' /SC MONTHLY /D {schedule_config["date"]} /ST {schedule_config["time"]}'
+        elif schedule_config.get("schedule") == "ONCE":
+            ps_cmd += f' /SC ONCE /ST {schedule_config["time"]}'
+
+        ps_cmd += ' /F'
+
+        result = subprocess.run(
+            ['powershell', '-Command', ps_cmd],
+            capture_output=True, text=True, encoding='utf-8', errors='replace'
+        )
 
         if result.returncode == 0:
             # 保存任务配置
@@ -177,10 +194,10 @@ def remove_task(config: Dict[str, Any]) -> Dict[str, Any]:
         return {"status": "error", "message": "Missing task name"}
 
     try:
-        # 删除 Windows 任务
+        # 使用 PowerShell 执行避免编码问题
         result = subprocess.run(
-            f'schtasks /Delete /TN "ClaudeScheduler\\{task_name}" /F',
-            capture_output=True, text=True, shell=True
+            ['powershell', '-Command', f'schtasks /Delete /TN "ClaudeScheduler\\{task_name}" /F'],
+            capture_output=True, text=True, encoding='utf-8', errors='replace'
         )
 
         # 删除配置
@@ -200,10 +217,10 @@ def remove_task(config: Dict[str, Any]) -> Dict[str, Any]:
 def list_tasks(config: Dict[str, Any]) -> Dict[str, Any]:
     """列出所有定时任务"""
     try:
-        # 查询 Windows 任务
+        # 使用 PowerShell 查询 Windows 任务
         result = subprocess.run(
-            'schtasks /Query /TN "ClaudeScheduler\\" /FO CSV /NH 2>nul || echo "No tasks"',
-            capture_output=True, text=True, shell=True
+            ['powershell', '-Command', 'schtasks /Query /TN "ClaudeScheduler\\*" /FO CSV /NH 2>$null; if(-not $?) { Write-Output "No tasks" }'],
+            capture_output=True, text=True, encoding='utf-8', errors='replace'
         )
 
         # 加载本地配置
@@ -259,10 +276,10 @@ def run_task(config: Dict[str, Any]) -> Dict[str, Any]:
         return {"status": "error", "message": "Missing task name"}
 
     try:
-        # 运行 Windows 任务
+        # 使用 PowerShell 运行 Windows 任务
         result = subprocess.run(
-            f'schtasks /Run /TN "ClaudeScheduler\\{task_name}"',
-            capture_output=True, text=True, shell=True
+            ['powershell', '-Command', f'schtasks /Run /TN "ClaudeScheduler\\{task_name}"'],
+            capture_output=True, text=True, encoding='utf-8', errors='replace'
         )
 
         if result.returncode == 0:
@@ -297,8 +314,8 @@ def enable_task(config: Dict[str, Any], enabled: bool) -> Dict[str, Any]:
     try:
         action = "/Enable" if enabled else "/Disable"
         result = subprocess.run(
-            f'schtasks /Change /TN "ClaudeScheduler\\{task_name}" {action}',
-            capture_output=True, text=True, shell=True
+            ['powershell', '-Command', f'schtasks /Change /TN "ClaudeScheduler\\{task_name}" {action}'],
+            capture_output=True, text=True, encoding='utf-8', errors='replace'
         )
 
         # 更新本地配置
