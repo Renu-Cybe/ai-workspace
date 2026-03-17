@@ -1,0 +1,14 @@
+{
+  "name": "ollama-helper",
+  "version": "1.0.0",
+  "description": "调用本地 Ollama 模型（Qwen）进行代码辅助",
+  "author": "Administrator",
+  "commands": {
+    "list": "python ollama_helper.py list",
+    "complete": "python ollama_helper.py complete",
+    "explain": "python ollama_helper.py explain",
+    "review": "python ollama_helper.py review",
+    "chat": "python ollama_helper.py chat"
+  },
+  "requirements": ["requests"]
+}

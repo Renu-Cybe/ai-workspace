@@ -127,21 +127,47 @@ python ~/.claude/memory-bank/tools/performance_optimizer.py
 
 [查看详情](./skills/skill-seeker/SKILL.md)
 
-### 完整 Skills 列表
+### 完整 Skills 列表（19个）
 
+#### 核心框架
 | Skill | 功能 | 触发示例 |
 |-------|------|----------|
-| **memory-cleanup** | 记忆库清理归档 | `"检查记忆库"` |
-| **skill-seeker** | 文档爬取生成技能 | `"从 https://docs.example.com 生成技能"` |
-| **video-summarizer** | 视频字幕提取总结 | `"总结这个 YouTube 视频"` |
-| **memory-manager** | 统一记忆库管理 | `"查看记忆库状态"` |
-| **changelog-generator** | 自动生成 changelog | `"生成发布日志"` |
-| **content-research-writer** | 内容研究与写作 | `"研究并撰写文章"` |
-| **artifacts-builder** | 创建可视化 artifacts | `"创建一个交互式图表"` |
-| **brand-guidelines** | Anthropic 品牌风格 | `"应用品牌风格"` |
-| **canvas-design** | 画布设计创作 | `"设计一个海报"` |
-| **developer-growth-analysis** | 开发者成长分析 | `"分析我的编码习惯"` |
-| **connect** | 连接 500+ 应用 | `"发送邮件到..."` |
+| **four-self-framework** | 四自框架核心 | 框架基础能力 |
+| **self-improving** | 执行反思与优化 | 自动优化执行过程 |
+| **memory-tiering** | 四层内存管理 | 记忆分层管理 |
+| **memory-searching** | 智能搜索 | 语义化搜索记忆 |
+| **memory-manager** | 统一管理 | `"查看记忆库状态"` |
+| **memory-cleanup** | 清理归档 | `"检查记忆库"` |
+
+#### 开发工具
+| Skill | 功能 | 触发示例 |
+|-------|------|----------|
+| **skill-generating** | 生成技能 | 自动生成 SKILL.md |
+| **skill-validating** | 验证规范 | 检查技能格式 |
+| **skill-seeker** | 文档爬取 | `"从 https://docs.example.com 生成技能"` |
+| **simplify** | 代码简化 | 优化代码质量 |
+
+#### 外部服务
+| Skill | 功能 | 触发示例 |
+|-------|------|----------|
+| **connect** | 多服务连接 | `"发送邮件到..."` |
+| **video-summarizer** | 视频字幕 | `"总结这个 YouTube 视频"` |
+| **ollama-helper** | 本地模型 | 调用本地 Ollama |
+
+#### 内容创作
+| Skill | 功能 | 触发示例 |
+|-------|------|----------|
+| **artifacts-builder** | HTML 组件 | `"创建一个交互式图表"` |
+| **canvas-design** | 视觉设计 | `"设计一个海报"` |
+| **brand-guidelines** | 品牌规范 | `"应用品牌风格"` |
+| **content-research-writer** | 内容写作 | `"研究并撰写文章"` |
+
+#### 生产力
+| Skill | 功能 | 触发示例 |
+|-------|------|----------|
+| **changelog-generator** | 更新日志 | `"生成发布日志"` |
+| **competitive-ads-extractor** | 广告分析 | 竞品广告提取 |
+| **developer-growth-analysis** | 成长分析 | `"分析我的编码习惯"` |
 
 ---
 
