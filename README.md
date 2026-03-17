@@ -1,6 +1,8 @@
 # Claude Code Workspace
 
-> 一套专为 Claude Code 设计的增强框架 - 记忆库管理 + 性能优化 + 技能开发
+> **四自增强框架** · 自感知 · 自适应 · 自组织 · 自编译
+>
+> 记忆库管理 + 性能优化 + 技能开发
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -9,7 +11,13 @@
 
 ## 简介
 
-Claude Code Workspace 是一个综合性的增强框架，为 Claude Code 提供**记忆库管理**、**性能优化**和**技能开发**三大核心能力。
+Claude Code Workspace 是一个基于**四自理念**设计的增强框架：
+
+| 自感知 | 自适应 | 自组织 | 自编译 |
+|--------|--------|--------|--------|
+| 感知自身状态和环境 | 根据上下文自动调整 | 自动维护结构和关系 | 根据需求生成组件 |
+
+为 Claude Code 提供**记忆库管理**、**性能优化**和**技能开发**三大核心能力。
 
 ### 三大组成部分
 
@@ -35,14 +43,16 @@ Claude Code Workspace 是一个综合性的增强框架，为 Claude Code 提供
 
 ---
 
-## 核心特性
+## 核心特性（四自实现）
 
-- 🧠 **分支感知**: 每个 git 分支拥有独立的记忆空间
-- 🧹 **自动清理**: 智能归档过期会话，限制历史文件数量
-- 📚 **技能生成**: 从任意文档网站自动生成 Claude Skills
-- ⚡ **性能优化**: 并行读取 (54x 加速)、LRU 缓存、响应压缩
-- 🌡️ **冷热分离**: C盘热数据 + F盘冷数据架构
-- 📝 **完整协议**: 标准化的记忆库操作流程
+| 能力 | 特性 | 说明 |
+|------|------|------|
+| **自感知** | 🧠 分支感知 | 每个 git 分支拥有独立记忆空间 |
+| **自适应** | ⚡ 性能优化 | 并行读取 (62x 加速)、LRU 缓存、响应压缩 |
+| **自组织** | 🧹 自动清理 | 智能归档、自动索引、智能标签 |
+| **自编译** | 📚 技能生成 | 从文档自动生成 Claude Skills |
+| **基础** | 🌡️ 冷热分离 | C盘热数据 + F盘冷数据架构 |
+| **规范** | 📝 完整协议 | 标准化的记忆库操作流程 |
 
 ## 快速开始
 
@@ -137,7 +147,16 @@ python ~/.claude/memory-bank/tools/performance_optimizer.py
 
 ## Core Framework (New in v2.0)
 
-分支感知的 Claude Code 记忆库核心框架。
+基于**四自理念**的分支感知记忆库核心框架。
+
+### 四自实现
+
+| 能力 | 实现组件 | 说明 |
+|------|----------|------|
+| **自感知** | IDENTITY.md, HEARTBEAT.md, active/MEMORY.md | 感知自身状态、环境、历史 |
+| **自适应** | switch-branch, 动态协议加载 | 根据 git 分支调整上下文 |
+| **自组织** | 自动目录创建, 智能归档, 自动索引 | 自动维护结构和数据关系 |
+| **自编译** | performance_optimizer (62x 加速) | 根据需求生成和优化组件 |
 
 ### 架构概览
 
@@ -232,40 +251,67 @@ F盘 (冷数据)
 
 **迁移指南**: 详见 [docs/ARCHITECTURE-v2.0.md](./docs/ARCHITECTURE-v2.0.md)
 
-## 协议规范
+## 协议规范（四自流程）
 
-### 启动流程 (v2.0)
+### 启动流程 - 自感知
 
 ```
-1. 检测当前 git 分支
-   └── 加载 memory-bank/[branch]/context/
+1. 加载核心上下文（感知自身身份和环境）
+   ├── context/IDENTITY.md    # 自感知：我是谁
+   ├── context/USER.md        # 自感知：用户是谁
+   ├── context/PROTOCOL.md    # 自感知：操作规范
+   └── context/HEARTBEAT.md   # 自感知：维护配置
 
-2. 加载核心上下文
-   ├── context/IDENTITY.md
-   ├── context/USER.md
-   ├── context/PROTOCOL.md
-   └── context/HEARTBEAT.md
+2. 检测当前 git 分支（感知环境）
+   └── 确定 [branch] = main 或 feature-xxx
 
-3. 检查 session/current.md 是否存在
+3. 检查 session/current.md（感知历史）
    ├── 存在 → 询问"上次异常结束，是否恢复？"
    └── 不存在 → 正常开始
-
-4. 执行清理检查
-   └── 调用 memory-cleanup skill
 ```
 
-### 对话进行中
+### 运行流程 - 自适应
 
-- **关键决策** → 追加到 `[branch]/decisions/`
-- **状态更新** → 写入 `active/MEMORY.md`
-- **错误记录** → 追加到 `errors/`
+```
+1. 根据分支自适应加载上下文
+   └── [branch]/context/PROJECT.md
 
-### 会话结束
+2. 根据任务自适应启用优化
+   ├── 多文件读取 → 启用 ParallelReader
+   ├── 重复读取 → 启用 FileCache
+   └── 长输出 → 启用 ResponseOptimizer
 
-- `current.md` → 归档到 `[branch]/sessions/`
-- 更新索引 `shared/.index/sessions.json`
-- 清理 `current.md`
-- 更新 `MEMORY.md`
+3. 对话中实时记录
+   ├── 关键决策 → [branch]/decisions/
+   ├── 状态更新 → active/MEMORY.md
+   └── 错误记录 → errors/
+```
+
+### 维护流程 - 自组织
+
+```
+1. 自动目录维护
+   └── 切换分支时自动创建目录结构
+
+2. 自动归档
+   └── 会话结束 → [branch]/sessions/ + 更新索引
+
+3. 自动清理
+   └── 定期归档旧文件到 F:\claude-memory\backup\
+```
+
+### 扩展流程 - 自编译
+
+```
+1. 生成新 Skill
+   └── 输入文档 URL → skill-seeker → Skill 包
+
+2. 性能优化
+   └── 监控数据 → performance_optimizer → 优化建议
+
+3. 知识编译
+   └── 原始文档 → 结构化知识 → 上下文文件
+```
 
 ## 安装要求
 
@@ -297,9 +343,14 @@ MIT License - 详见 [LICENSE](./LICENSE)
 
 ## 更新日志
 
-### v2.0.0 (2026-03-17)
-- ✨ 新增分支感知架构 (Core Framework)
-- ✨ 新增性能优化工具 (54x 加速)
+### v2.0.0 (2026-03-17) - 四自框架
+
+基于**自感知、自适应、自组织、自编译**四自理念的全新架构：
+
+- 🧠 **自感知**: IDENTITY.md, HEARTBEAT.md, 状态追踪系统
+- 🔄 **自适应**: 分支感知上下文、自适应缓存策略
+- 🏗️ **自组织**: 自动目录创建、智能归档、自动索引
+- ⚙️ **自编译**: Skill生成、性能优化 (62x 加速)、知识编译
 - ✨ 新增自动化脚本集
 - 📝 统一的记忆库目录结构
 - 📚 完整的架构迁移文档
@@ -311,6 +362,6 @@ MIT License - 详见 [LICENSE](./LICENSE)
 
 ---
 
-**Made with for Claude Code users**
+**四自框架** · 自感知 · 自适应 · 自组织 · 自编译
 
 *Latest Release: v2.0.0 | [查看全部版本](./CHANGELOG.md) | [GitHub](https://github.com/Renu-Cybe/ai-workspace)*
