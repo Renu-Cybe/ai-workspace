@@ -127,7 +127,7 @@ python ~/.claude/memory-bank/tools/performance_optimizer.py
 
 [查看详情](./skills/skill-seeker/SKILL.md)
 
-### 完整 Skills 列表（19个）
+### 完整 Skills 列表（20个）
 
 #### 核心框架
 | Skill | 功能 | 触发示例 |
@@ -138,6 +138,7 @@ python ~/.claude/memory-bank/tools/performance_optimizer.py
 | **memory-searching** | 智能搜索 | 语义化搜索记忆 |
 | **memory-manager** | 统一管理 | `"查看记忆库状态"` |
 | **memory-cleanup** | 清理归档 | `"检查记忆库"` |
+| **scheduler** | 定时任务 | `"每周一早上生成成长报告"` |
 
 #### 开发工具
 | Skill | 功能 | 触发示例 |
